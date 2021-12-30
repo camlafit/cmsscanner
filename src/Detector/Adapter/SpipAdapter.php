@@ -27,7 +27,11 @@ class SpipAdapter implements AdapterInterface
      * @var array
      */
     protected $versions = array(
-        array( // 6.x
+        array( // 1.x
+            'filename' => '/ecrire/inc_version.php',
+            'regexp' => '/\s*\$spip_version\s*=\s*[\'"]?(.*)[\'"]?\s*;/',
+        ),
+        array( // > 2.x
             'filename' => '/ecrire/inc_version.php',
             'regexp' => '/\s*\$spip_version_branche\s*=\s*[\'"](.*)[\'"]\s*/',
         ),
