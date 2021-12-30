@@ -6,7 +6,14 @@
  * @link       https://www.cms-garden.org
  */
 
-namespace Cmsgarden\Cmsscanner\Detector\Adapter;
+namespace {
+    if (!function_exists('set_magic_quotes_runtime')) {
+        function set_magic_quotes_runtime() {return true;}
+    }
+}
+
+
+namespace Cmsgarden\Cmsscanner\Detector\Adapter{
 
 use Cmsgarden\Cmsscanner\Detector\Module;
 use Cmsgarden\Cmsscanner\Detector\System;
@@ -123,6 +130,8 @@ class SpipAdapter implements AdapterInterface
 
             $plugins = unserialize($meta_cache['plugin']);
 
+            $spip_version = $this->detectVersion($path);
+
             foreach($plugins as $plugin) {
                 if (preg_match('/^php:?/',$plugin['nom'])) {
                     continue; //Ignore virtual module (php feature)
@@ -130,7 +139,11 @@ class SpipAdapter implements AdapterInterface
                 if (preg_match('/^spip$/i',$plugin['nom'])) {
                     continue; //Ignore SPIP itself (act as a virtual module)
                 }
-                $modules[] = new Module(trim($plugin['nom']), $path->getRealPath()."/".constant($plugin['dir_type']).$plugin['dir'], $plugin['version']);
+                if (version_compare($spip_version,"2", "<" )) {
+                    $modules[] = new Module(trim($plugin['nom']), $path->getRealPath()."/"._DIR_PLUGINS.$plugin['dir'], $plugin['version']);
+                } else {
+                    $modules[] = new Module(trim($plugin['nom']), $path->getRealPath()."/".constant($plugin['dir_type']).$plugin['dir'], $plugin['version']);
+                }
             }
         }
 
@@ -144,4 +157,5 @@ class SpipAdapter implements AdapterInterface
     {
         return 'SPIP';
     }
+}
 }
