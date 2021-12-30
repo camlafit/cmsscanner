@@ -121,6 +121,7 @@ class SpipAdapter implements AdapterInterface
         $finder = new Finder();
         $finder->name('meta_cache.php');
 
+        chdir($path->getRealPath());
         include_once($path->getRealPath()."/ecrire/inc_version.php");
 
         foreach ($finder->in($path->getRealPath()) as $config) {
