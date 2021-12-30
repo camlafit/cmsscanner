@@ -118,6 +118,9 @@ class SpipAdapter implements AdapterInterface
             $plugins = unserialize($meta_cache['plugin']);
 
             foreach($plugins as $plugin) {
+                if (preg_match('/^php:?/',$plugin['nom'])) {
+                    continue; //Ignore virtual module (php feature)
+                }
                 $modules[] = new Module($plugin['nom'], $config->getRealPath()."/".$plugin['dir_type']."/".$plugin['dir'], $plugin['version']);
             }
         }
