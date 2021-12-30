@@ -59,7 +59,7 @@ class SpipAdapter implements AdapterInterface
         if ($fileName !== "spip.php") {
             return false;
         }
-        $path = new \SplFileInfo($file->getPathInfo()->getPath());
+        $path = new \SplFileInfo($file->getPath());
 
         //In some case plugins could provide also system root file
         //Prevent false positive
