@@ -110,6 +110,8 @@ class SpipAdapter implements AdapterInterface
         $finder = new Finder();
         $finder->name('meta_cache.php');
 
+        include_once($path->getRealPath()."/ecrire/inc_version.php");
+
         foreach ($finder->in($path->getRealPath()) as $config) {
             $meta_cache = file_get_contents($config->getRealPath());
             $meta_cache = substr($meta_cache, strlen('<' . "?php die ('Acces interdit'); ?" . ">\n"));
@@ -124,7 +126,7 @@ class SpipAdapter implements AdapterInterface
                 if (preg_match('/^spip$/i',$plugin['nom'])) {
                     continue; //Ignore SPIP itself (act as a virtual module)
                 }
-                $modules[] = new Module(trim($plugin['nom']), $config->getRealPath()."/".$plugin['dir_type']."/".$plugin['dir'], $plugin['version']);
+                $modules[] = new Module(trim($plugin['nom']), $path->getRealPath()."/".constant($plugin['dir_type']).$plugin['dir'], $plugin['version']);
             }
         }
 
