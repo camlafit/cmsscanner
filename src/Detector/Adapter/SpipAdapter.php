@@ -60,8 +60,16 @@ class SpipAdapter implements AdapterInterface
         }
         $path = new \SplFileInfo($file->getPathInfo()->getPath());
 
-        // Return result if working
-        return new System($this->getName(), $path);
+        //In some case plugins could provide also system root file
+        //Prevent false positive
+        foreach ($this->versions as $version) {
+            $sysEnvBuilder = $path->getRealPath() . $version['filename'];
+            if (file_exists($sysEnvBuilder)) {
+                // Return result if working
+                return new System($this->getName(), $path);
+            }
+        }
+        return false;
     }
 
     /**
