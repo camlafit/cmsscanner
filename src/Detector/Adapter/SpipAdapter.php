@@ -8,6 +8,7 @@
 
 namespace Cmsgarden\Cmsscanner\Detector\Adapter;
 
+use Cmsgarden\Cmsscanner\Detector\Module;
 use Cmsgarden\Cmsscanner\Detector\System;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -104,8 +105,24 @@ class SpipAdapter implements AdapterInterface
      */
     public function detectModules(\SplFileInfo $path)
     {
-        // TODO implement this function
-        return false;
+        $modules = array();
+
+        $finder = new Finder();
+        $finder->name('meta_cache.php');
+
+        foreach ($finder->in($path->getRealPath()) as $config) {
+            $meta_cache = file_get_contents($config->getRealPath());
+            $meta_cache = substr($meta_cache, strlen('<' . "?php die ('Acces interdit'); ?" . ">\n"));
+            $meta_cache = unserialize($meta_cache);
+
+            $plugins = unserialize($meta_cache['plugin']);
+
+            foreach($plugins as $plugin) {
+                $modules[] = new Module($plugin['nom'], $config->getRealPath()."/".$plugin['dir_type']."/".$plugin['dir'], $plugin['version']);
+            }
+        }
+
+        return $modules;
     }
 
     /***
