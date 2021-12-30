@@ -42,7 +42,6 @@ class SpipAdapter implements AdapterInterface
     public function appendDetectionCriteria(Finder $finder)
     {
         $finder->name('spip.php');
-        $finder->name('spip_loader.php');        
         return $finder;
     }
 
@@ -56,7 +55,7 @@ class SpipAdapter implements AdapterInterface
     public function detectSystem(SplFileInfo $file)
     {
         $fileName = $file->getFilename();
-        if ($fileName !== "spip.php" && $fileName !== "spip_loader.php") {
+        if ($fileName !== "spip.php") {
             return false;
         }
         $path = new \SplFileInfo($file->getPathInfo()->getPath());
